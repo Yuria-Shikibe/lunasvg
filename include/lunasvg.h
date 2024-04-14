@@ -23,10 +23,16 @@
 #ifndef LUNASVG_H
 #define LUNASVG_H
 
+#ifndef THIRD_PARTY_USING_IMPORT
 #include <cstdint>
 #include <memory>
 #include <string>
 #include <map>
+
+#else
+import std;
+// import std.compat;
+#endif
 
 #if defined(_MSC_VER) && defined(LUNASVG_SHARED)
 #ifdef LUNASVG_EXPORT

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.3)
 
 project(lunasvg VERSION 2.3.9 LANGUAGES CXX C)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_C_STANDARD 11)
 
 option(BUILD_SHARED_LIBS "Build as a shared library" OFF)
@@ -38,3 +38,5 @@ install(TARGETS lunasvg
     ARCHIVE     DESTINATION    ${LUNASVG_LIBDIR}
     INCLUDES    DESTINATION    ${LUNASVG_INCDIR}
 )
+
+message(STATUS "Lunasvg Added")

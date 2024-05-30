@@ -11,13 +11,13 @@
 
 namespace lunasvg {
 
-LayoutObject::LayoutObject(Node* node, LayoutId id)
+LayoutObject::LayoutObject(Node* node, const LayoutId id)
     : m_node(node), m_id(id)
 {
     node->setBox(this);
 }
 
-LayoutContainer::LayoutContainer(Node* node, LayoutId id)
+LayoutContainer::LayoutContainer(Node* node, const LayoutId id)
     : LayoutObject(node, id)
 {
 }
@@ -157,7 +157,7 @@ LayoutMarker::LayoutMarker(Node* node)
 {
 }
 
-Transform LayoutMarker::markerTransform(const Point& origin, double angle, double strokeWidth) const
+Transform LayoutMarker::markerTransform(const Point& origin, const double angle, const double strokeWidth) const
 {
     auto markerTransformation = Transform::translated(origin.x, origin.y);
     if(orient.type() == MarkerOrient::Auto)
@@ -172,12 +172,12 @@ Transform LayoutMarker::markerTransform(const Point& origin, double angle, doubl
     return markerTransformation;
 }
 
-Rect LayoutMarker::markerBoundingBox(const Point& origin, double angle, double strokeWidth) const
+Rect LayoutMarker::markerBoundingBox(const Point& origin, const double angle, const double strokeWidth) const
 {
     return markerTransform(origin, angle, strokeWidth).map(transform.map(strokeBoundingBox()));
 }
 
-void LayoutMarker::renderMarker(RenderState& state, const Point& origin, double angle, double strokeWidth) const
+void LayoutMarker::renderMarker(RenderState& state, const Point& origin, const double angle, const double strokeWidth) const
 {
     BlendInfo info{clipper, masker, opacity, clip};
     RenderState newState(this, state.mode());
@@ -227,7 +227,7 @@ void LayoutPattern::apply(RenderState& state) const
     state.canvas->setTexture(newState.canvas.get(), TextureType::Tiled, patternTransform);
 }
 
-LayoutGradient::LayoutGradient(Node* node, LayoutId id)
+LayoutGradient::LayoutGradient(Node* node, const LayoutId id)
     : LayoutObject(node, id)
 {
 }
@@ -322,7 +322,7 @@ void StrokeData::inflate(Rect& box) const
     box.h += delta * 2.0;
 }
 
-MarkerPosition::MarkerPosition(const LayoutMarker* marker, const Point& origin, double angle)
+MarkerPosition::MarkerPosition(const LayoutMarker* marker, const Point& origin, const double angle)
     : marker(marker), origin(origin), angle(angle)
 {
 }
@@ -393,7 +393,7 @@ const Rect& LayoutShape::strokeBoundingBox() const
     return m_strokeBoundingBox;
 }
 
-RenderState::RenderState(const LayoutObject* object, RenderMode mode)
+RenderState::RenderState(const LayoutObject* object, const RenderMode mode)
     : m_object(object), m_mode(mode)
 {
 }

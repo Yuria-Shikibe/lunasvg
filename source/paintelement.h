@@ -97,12 +97,12 @@ public:
         m_hasGradientTransform = true;
     }
 
-    void setSpreadMethod(SpreadMethod spreadMethod) {
+    void setSpreadMethod(const SpreadMethod spreadMethod) {
         m_spreadMethod = spreadMethod;
         m_hasSpreadMethod = true;
     }
 
-    void setGradientUnits(Units gradientUnits) {
+    void setGradientUnits(const Units gradientUnits) {
         m_gradientUnits = gradientUnits;
         m_hasGradientUnits = true;
     }
@@ -277,12 +277,12 @@ public:
         m_hasPatternTransform = true;
     }
 
-    void setPatternUnits(Units patternUnits) {
+    void setPatternUnits(const Units patternUnits) {
         m_patternUnits = patternUnits;
         m_hasPatternUnits = true;
     }
 
-    void setPatternContentUnits(Units patternContentUnits) {
+    void setPatternContentUnits(const Units patternContentUnits) {
         m_patternContentUnits = patternContentUnits;
         m_hasPatternContentUnits = true;
     }

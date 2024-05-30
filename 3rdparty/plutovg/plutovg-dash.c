@@ -2,7 +2,7 @@
 
 #include <math.h>
 
-plutovg_dash_t* plutovg_dash_create(double offset, const double* data, int size)
+plutovg_dash_t* plutovg_dash_create(const double offset, const double* data, const int size)
 {
     if(data==NULL || size==0)
         return NULL;

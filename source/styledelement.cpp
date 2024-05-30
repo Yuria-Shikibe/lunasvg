@@ -3,7 +3,7 @@
 
 namespace lunasvg {
 
-StyledElement::StyledElement(ElementID id)
+StyledElement::StyledElement(const ElementID id)
     : Element(id)
 {
 }

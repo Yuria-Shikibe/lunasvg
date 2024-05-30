@@ -5,7 +5,7 @@
 
 namespace lunasvg {
 
-Length Parser::parseLength(const std::string& string, LengthNegativeValuesMode mode, const Length& defaultValue)
+Length Parser::parseLength(const std::string& string, const LengthNegativeValuesMode mode, const Length& defaultValue)
 {
     if(string.empty())
         return defaultValue;
@@ -21,7 +21,7 @@ Length Parser::parseLength(const std::string& string, LengthNegativeValuesMode m
     return Length{value, units};
 }
 
-LengthList Parser::parseLengthList(const std::string& string, LengthNegativeValuesMode mode)
+LengthList Parser::parseLengthList(const std::string& string, const LengthNegativeValuesMode mode)
 {
     if(string.empty())
         return LengthList{};
@@ -43,7 +43,7 @@ LengthList Parser::parseLengthList(const std::string& string, LengthNegativeValu
     return values;
 }
 
-double Parser::parseNumber(const std::string& string, double defaultValue)
+double Parser::parseNumber(const std::string& string, const double defaultValue)
 {
     if(string.empty())
         return defaultValue;
@@ -58,7 +58,7 @@ double Parser::parseNumber(const std::string& string, double defaultValue)
     return value;
 }
 
-double Parser::parseNumberPercentage(const std::string& string, double defaultValue)
+double Parser::parseNumberPercentage(const std::string& string, const double defaultValue)
 {
     if(string.empty())
         return defaultValue;
@@ -469,7 +469,7 @@ SpreadMethod Parser::parseSpreadMethod(const std::string& string)
     return SpreadMethod::Pad;
 }
 
-Units Parser::parseUnits(const std::string& string, Units defaultValue)
+Units Parser::parseUnits(const std::string& string, const Units defaultValue)
 {
     if(string.empty())
         return defaultValue;
@@ -758,7 +758,7 @@ Visibility Parser::parseVisibility(const std::string& string)
     return Visibility::Hidden;
 }
 
-Overflow Parser::parseOverflow(const std::string& string, Overflow defaultValue)
+Overflow Parser::parseOverflow(const std::string& string, const Overflow defaultValue)
 {
     if(string.empty())
         return defaultValue;
@@ -770,7 +770,7 @@ Overflow Parser::parseOverflow(const std::string& string, Overflow defaultValue)
     return defaultValue;
 }
 
-bool Parser::parseLength(const char*& ptr, const char* end, double& value, LengthUnits& units, LengthNegativeValuesMode mode)
+bool Parser::parseLength(const char*& ptr, const char* end, double& value, LengthUnits& units, const LengthNegativeValuesMode mode)
 {
     if(!Utils::parseNumber(ptr, end, value))
         return false;
@@ -836,7 +836,7 @@ bool Parser::parseLength(const char*& ptr, const char* end, double& value, Lengt
     return true;
 }
 
-bool Parser::parseNumberList(const char*& ptr, const char* end, double* values, int count)
+bool Parser::parseNumberList(const char*& ptr, const char* end, double* values, const int count)
 {
     for(int i = 0; i < count; i++) {
         if(!Utils::parseNumber(ptr, end, values[i]))
@@ -1666,7 +1666,7 @@ static inline void removeComments(std::string& value)
     }
 }
 
-bool Document::parse(const char* data, std::size_t size)
+bool Document::parse(const char* data, const std::size_t size)
 {
     auto ptr = data;
     auto end = ptr + size;
@@ -1676,7 +1676,7 @@ bool Document::parse(const char* data, std::size_t size)
     std::string name;
     std::string value;
     int ignoring = 0;
-    auto handleText = [&](const char* start, const char* end, bool in_cdata) {
+    auto handleText = [&](const char* start, const char* end, const bool in_cdata) {
         if(ignoring > 0 || current == nullptr || current->id() != ElementID::Style)
             return;
 

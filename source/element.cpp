@@ -22,12 +22,12 @@ std::unique_ptr<Node> TextNode::clone() const
     return std::move(node);
 }
 
-Element::Element(ElementID id)
+Element::Element(const ElementID id)
     : m_id(id)
 {
 }
 
-std::unique_ptr<Element> Element::create(ElementID id)
+std::unique_ptr<Element> Element::create(const ElementID id)
 {
     switch(id) {
     case ElementID::Svg:
@@ -79,7 +79,7 @@ std::unique_ptr<Element> Element::create(ElementID id)
     return nullptr;
 }
 
-void Element::set(PropertyID id, const std::string& value, int specificity)
+void Element::set(const PropertyID id, const std::string& value, const int specificity)
 {
     for(auto& property : m_properties) {
         if(property.id == id) {
@@ -97,7 +97,7 @@ void Element::set(PropertyID id, const std::string& value, int specificity)
 
 static const std::string EmptyString;
 
-const std::string& Element::get(PropertyID id) const
+const std::string& Element::get(const PropertyID id) const
 {
     for(auto& property : m_properties) {
         if(property.id == id) {
@@ -110,7 +110,7 @@ const std::string& Element::get(PropertyID id) const
 
 static const std::string InheritString{"inherit"};
 
-const std::string& Element::find(PropertyID id) const
+const std::string& Element::find(const PropertyID id) const
 {
     auto element = this;
     do {
@@ -122,7 +122,7 @@ const std::string& Element::find(PropertyID id) const
     return EmptyString;
 }
 
-bool Element::has(PropertyID id) const
+bool Element::has(const PropertyID id) const
 {
     for(auto& property : m_properties) {
         if(property.id == id) {

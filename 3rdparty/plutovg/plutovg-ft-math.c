@@ -19,7 +19,7 @@
 
 #if defined(_MSC_VER)
 #include <intrin.h>
-static unsigned int __inline clz(unsigned int x) {
+static unsigned int __inline clz(const unsigned int x) {
     unsigned long r = 0;
     if (x != 0)
     {
@@ -281,7 +281,7 @@ static void ft_trig_pseudo_polarize(PVG_FT_Vector* vec)
 
 /* documentation is in fttrigon.h */
 
-PVG_FT_Fixed PVG_FT_Cos(PVG_FT_Angle angle)
+PVG_FT_Fixed PVG_FT_Cos(const PVG_FT_Angle angle)
 {
     PVG_FT_Vector v;
 
@@ -294,14 +294,14 @@ PVG_FT_Fixed PVG_FT_Cos(PVG_FT_Angle angle)
 
 /* documentation is in fttrigon.h */
 
-PVG_FT_Fixed PVG_FT_Sin(PVG_FT_Angle angle)
+PVG_FT_Fixed PVG_FT_Sin(const PVG_FT_Angle angle)
 {
     return PVG_FT_Cos(PVG_FT_ANGLE_PI2 - angle);
 }
 
 /* documentation is in fttrigon.h */
 
-PVG_FT_Fixed PVG_FT_Tan(PVG_FT_Angle angle)
+PVG_FT_Fixed PVG_FT_Tan(const PVG_FT_Angle angle)
 {
     PVG_FT_Vector v;
 
@@ -314,7 +314,7 @@ PVG_FT_Fixed PVG_FT_Tan(PVG_FT_Angle angle)
 
 /* documentation is in fttrigon.h */
 
-PVG_FT_Angle PVG_FT_Atan2(PVG_FT_Fixed dx, PVG_FT_Fixed dy)
+PVG_FT_Angle PVG_FT_Atan2(const PVG_FT_Fixed dx, const PVG_FT_Fixed dy)
 {
     PVG_FT_Vector v;
 
@@ -330,7 +330,7 @@ PVG_FT_Angle PVG_FT_Atan2(PVG_FT_Fixed dx, PVG_FT_Fixed dy)
 
 /* documentation is in fttrigon.h */
 
-void PVG_FT_Vector_Unit(PVG_FT_Vector* vec, PVG_FT_Angle angle)
+void PVG_FT_Vector_Unit(PVG_FT_Vector* vec, const PVG_FT_Angle angle)
 {
     vec->x = PVG_FT_TRIG_SCALE >> 8;
     vec->y = 0;
@@ -339,7 +339,7 @@ void PVG_FT_Vector_Unit(PVG_FT_Vector* vec, PVG_FT_Angle angle)
     vec->y = (vec->y + 0x80L) >> 8;
 }
 
-void PVG_FT_Vector_Rotate(PVG_FT_Vector* vec, PVG_FT_Angle angle)
+void PVG_FT_Vector_Rotate(PVG_FT_Vector* vec, const PVG_FT_Angle angle)
 {
     PVG_FT_Int     shift;
     PVG_FT_Vector  v = *vec;
@@ -419,8 +419,8 @@ void PVG_FT_Vector_Polarize(PVG_FT_Vector* vec, PVG_FT_Fixed* length,
 
 /* documentation is in fttrigon.h */
 
-void PVG_FT_Vector_From_Polar(PVG_FT_Vector* vec, PVG_FT_Fixed length,
-    PVG_FT_Angle angle)
+void PVG_FT_Vector_From_Polar(PVG_FT_Vector* vec, const PVG_FT_Fixed length,
+                              const PVG_FT_Angle angle)
 {
     vec->x = length;
     vec->y = 0;
@@ -430,7 +430,7 @@ void PVG_FT_Vector_From_Polar(PVG_FT_Vector* vec, PVG_FT_Fixed length,
 
 /* documentation is in fttrigon.h */
 
-PVG_FT_Angle PVG_FT_Angle_Diff( PVG_FT_Angle  angle1, PVG_FT_Angle  angle2 )
+PVG_FT_Angle PVG_FT_Angle_Diff(const PVG_FT_Angle  angle1, const PVG_FT_Angle  angle2 )
 {
     PVG_FT_Angle  delta = angle2 - angle1;
 

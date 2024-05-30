@@ -9,7 +9,7 @@
 
 namespace lunasvg {
 
-Box::Box(double x, double y, double w, double h)
+Box::Box(const double x, const double y, const double w, const double h)
     : x(x), y(y), w(w), h(h)
 {
 }
@@ -30,7 +30,7 @@ Box Box::transformed(const Matrix& matrix) const
     return Transform(matrix).map(*this);
 }
 
-Matrix::Matrix(double a, double b, double c, double d, double e, double f)
+Matrix::Matrix(const double a, const double b, const double c, const double d, const double e, const double f)
     : a(a), b(b), c(c), d(d), e(e), f(f)
 {
 }
@@ -40,37 +40,37 @@ Matrix::Matrix(const Transform& transform)
 {
 }
 
-Matrix& Matrix::rotate(double angle)
+Matrix& Matrix::rotate(const double angle)
 {
     *this = rotated(angle) * *this;
     return *this;
 }
 
-Matrix& Matrix::rotate(double angle, double cx, double cy)
+Matrix& Matrix::rotate(const double angle, const double cx, const double cy)
 {
     *this = rotated(angle, cx, cy) * *this;
     return *this;
 }
 
-Matrix& Matrix::scale(double sx, double sy)
+Matrix& Matrix::scale(const double sx, const double sy)
 {
     *this = scaled(sx, sy) * *this;
     return *this;
 }
 
-Matrix& Matrix::shear(double shx, double shy)
+Matrix& Matrix::shear(const double shx, const double shy)
 {
     *this = sheared(shx, shy) * *this;
     return *this;
 }
 
-Matrix& Matrix::translate(double tx, double ty)
+Matrix& Matrix::translate(const double tx, const double ty)
 {
    *this = translated(tx, ty) * *this;
     return *this;
 }
 
-Matrix& Matrix::transform(double _a, double _b, double _c, double _d, double _e, double _f)
+Matrix& Matrix::transform(const double _a, const double _b, const double _c, const double _d, const double _e, const double _f)
 {
     *this = Matrix{_a, _b, _c, _d, _e, _f} * *this;
     return *this;
@@ -116,27 +116,27 @@ Matrix Matrix::operator*(const Matrix& matrix) const
     return Transform(*this) * Transform(matrix);
 }
 
-Matrix Matrix::rotated(double angle)
+Matrix Matrix::rotated(const double angle)
 {
     return Transform::rotated(angle);
 }
 
-Matrix Matrix::rotated(double angle, double cx, double cy)
+Matrix Matrix::rotated(const double angle, const double cx, const double cy)
 {
     return Transform::rotated(angle, cx, cy);
 }
 
-Matrix Matrix::scaled(double sx, double sy)
+Matrix Matrix::scaled(const double sx, const double sy)
 {
     return Transform::scaled(sx, sy);
 }
 
-Matrix Matrix::sheared(double shx, double shy)
+Matrix Matrix::sheared(const double shx, const double shy)
 {
     return Transform::sheared(shx, shy);
 }
 
-Matrix Matrix::translated(double tx, double ty)
+Matrix Matrix::translated(const double tx, const double ty)
 {
     return Transform::translated(tx, ty);
 }
@@ -152,12 +152,12 @@ struct Bitmap::Impl {
     std::uint32_t stride;
 };
 
-Bitmap::Impl::Impl(std::uint8_t* data, std::uint32_t width, std::uint32_t height, std::uint32_t stride)
+Bitmap::Impl::Impl(std::uint8_t* data, const std::uint32_t width, const std::uint32_t height, const std::uint32_t stride)
     : data(data), width(width), height(height), stride(stride)
 {
 }
 
-Bitmap::Impl::Impl(std::uint32_t width, std::uint32_t height)
+Bitmap::Impl::Impl(const std::uint32_t width, const std::uint32_t height)
     : ownData(new std::uint8_t[width*height*4]), data(nullptr), width(width), height(height), stride(width * 4)
 {
 }
@@ -166,22 +166,22 @@ Bitmap::Bitmap()
 {
 }
 
-Bitmap::Bitmap(std::uint8_t* data, std::uint32_t width, std::uint32_t height, std::uint32_t stride)
+Bitmap::Bitmap(std::uint8_t* data, const std::uint32_t width, const std::uint32_t height, const std::uint32_t stride)
     : m_impl(new Impl(data, width, height, stride))
 {
 }
 
-Bitmap::Bitmap(std::uint32_t width, std::uint32_t height)
+Bitmap::Bitmap(const std::uint32_t width, const std::uint32_t height)
     : m_impl(new Impl(width, height))
 {
 }
 
-void Bitmap::reset(std::uint8_t* data, std::uint32_t width, std::uint32_t height, std::uint32_t stride)
+void Bitmap::reset(std::uint8_t* data, const std::uint32_t width, const std::uint32_t height, const std::uint32_t stride)
 {
     m_impl.reset(new Impl(data, width, height, stride));
 }
 
-void Bitmap::reset(std::uint32_t width, std::uint32_t height)
+void Bitmap::reset(const std::uint32_t width, const std::uint32_t height)
 {
     m_impl.reset(new Impl(width, height));
 }
@@ -210,7 +210,7 @@ std::uint32_t Bitmap::stride() const
     return m_impl ? m_impl->stride : 0;
 }
 
-void Bitmap::clear(std::uint32_t color)
+void Bitmap::clear(const std::uint32_t color)
 {
     auto r = (color >> 24) & 0xFF;
     auto g = (color >> 16) & 0xFF;
@@ -240,7 +240,7 @@ void Bitmap::clear(std::uint32_t color)
     }
 }
 
-void Bitmap::convert(int ri, int gi, int bi, int ai, bool unpremultiply)
+void Bitmap::convert(const int ri, const int gi, const int bi, const int ai, const bool unpremultiply)
 {
     auto width = this->width();
     auto height = this->height();
@@ -344,7 +344,7 @@ Matrix DomElement::getAbsoluteTransform() const
     return transform;
 }
 
-Bitmap DomElement::renderToBitmap(std::uint32_t width, std::uint32_t height, std::uint32_t backgroundColor) const
+Bitmap DomElement::renderToBitmap(std::uint32_t width, std::uint32_t height, const std::uint32_t backgroundColor) const
 {
     if(m_element == nullptr || !m_element->box())
         return Bitmap();
@@ -392,7 +392,7 @@ std::unique_ptr<Document> Document::loadFromData(const std::string& string)
     return loadFromData(string.data(), string.size());
 }
 
-std::unique_ptr<Document> Document::loadFromData(const char* data, std::size_t size)
+std::unique_ptr<Document> Document::loadFromData(const char* data, const std::size_t size)
 {
     std::unique_ptr<Document> document(new Document);
     if(!document->parse(data, size))
@@ -451,7 +451,7 @@ void Document::render(Bitmap bitmap, const Matrix& matrix) const
     m_rootBox->render(state);
 }
 
-Bitmap Document::renderToBitmap(std::uint32_t width, std::uint32_t height, std::uint32_t backgroundColor) const
+Bitmap Document::renderToBitmap(std::uint32_t width, std::uint32_t height, const std::uint32_t backgroundColor) const
 {
     if(m_rootBox == nullptr || m_rootBox->width == 0.0 || m_rootBox->height == 0.0)
         return Bitmap();

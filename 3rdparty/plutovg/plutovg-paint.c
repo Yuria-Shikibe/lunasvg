@@ -1,11 +1,11 @@
 #include "plutovg-private.h"
 
-void plutovg_color_init_rgb(plutovg_color_t* color, double r, double g, double b)
+void plutovg_color_init_rgb(plutovg_color_t* color, const double r, const double g, const double b)
 {
     plutovg_color_init_rgba(color, r, g,  b, 1.0);
 }
 
-void plutovg_color_init_rgba(plutovg_color_t* color, double r, double g, double b, double a)
+void plutovg_color_init_rgba(plutovg_color_t* color, const double r, const double g, const double b, const double a)
 {
     color->r = plutovg_clamp(r, 0.0, 1.0);
     color->g = plutovg_clamp(g, 0.0, 1.0);
@@ -13,7 +13,7 @@ void plutovg_color_init_rgba(plutovg_color_t* color, double r, double g, double 
     color->a = plutovg_clamp(a, 0.0, 1.0);
 }
 
-void plutovg_gradient_init_linear(plutovg_gradient_t* gradient, double x1, double y1, double x2, double y2)
+void plutovg_gradient_init_linear(plutovg_gradient_t* gradient, const double x1, const double y1, const double x2, const double y2)
 {
     gradient->type = plutovg_gradient_type_linear;
     gradient->spread = plutovg_spread_method_pad;
@@ -23,7 +23,7 @@ void plutovg_gradient_init_linear(plutovg_gradient_t* gradient, double x1, doubl
     plutovg_gradient_set_values_linear(gradient, x1, y1, x2, y2);
 }
 
-void plutovg_gradient_init_radial(plutovg_gradient_t* gradient, double cx, double cy, double cr, double fx, double fy, double fr)
+void plutovg_gradient_init_radial(plutovg_gradient_t* gradient, const double cx, const double cy, const double cr, const double fx, const double fy, const double fr)
 {
     gradient->type = plutovg_gradient_type_radial;
     gradient->spread = plutovg_spread_method_pad;
@@ -33,7 +33,7 @@ void plutovg_gradient_init_radial(plutovg_gradient_t* gradient, double cx, doubl
     plutovg_gradient_set_values_radial(gradient, cx, cy, cr, fx, fy, fr);
 }
 
-void plutovg_gradient_set_spread(plutovg_gradient_t* gradient, plutovg_spread_method_t spread)
+void plutovg_gradient_set_spread(plutovg_gradient_t* gradient, const plutovg_spread_method_t spread)
 {
     gradient->spread = spread;
 }
@@ -53,12 +53,12 @@ void plutovg_gradient_get_matrix(const plutovg_gradient_t* gradient, plutovg_mat
     *matrix = gradient->matrix;
 }
 
-void plutovg_gradient_add_stop_rgb(plutovg_gradient_t* gradient, double offset, double r, double g, double b)
+void plutovg_gradient_add_stop_rgb(plutovg_gradient_t* gradient, const double offset, const double r, const double g, const double b)
 {
     plutovg_gradient_add_stop_rgba(gradient, offset, r, g, b, 1.0);
 }
 
-void plutovg_gradient_add_stop_rgba(plutovg_gradient_t* gradient, double offset, double r, double g, double b, double a)
+void plutovg_gradient_add_stop_rgba(plutovg_gradient_t* gradient, double offset, const double r, const double g, const double b, const double a)
 {
     if(offset < 0.0) offset = 0.0;
     if(offset > 1.0) offset = 1.0;
@@ -80,7 +80,7 @@ void plutovg_gradient_add_stop_rgba(plutovg_gradient_t* gradient, double offset,
     gradient->stops.size += 1;
 }
 
-void plutovg_gradient_add_stop_color(plutovg_gradient_t* gradient, double offset, const plutovg_color_t* color)
+void plutovg_gradient_add_stop_color(plutovg_gradient_t* gradient, const double offset, const plutovg_color_t* color)
 {
     plutovg_gradient_add_stop_rgba(gradient, offset, color->r, color->g, color->b, color->a);
 }
@@ -128,7 +128,7 @@ void plutovg_gradient_get_values_radial(const plutovg_gradient_t* gradient, doub
     if(fr) *fr = gradient->values[5];
 }
 
-void plutovg_gradient_set_values_linear(plutovg_gradient_t* gradient, double x1, double y1, double x2, double y2)
+void plutovg_gradient_set_values_linear(plutovg_gradient_t* gradient, const double x1, const double y1, const double x2, const double y2)
 {
     gradient->values[0] = x1;
     gradient->values[1] = y1;
@@ -136,7 +136,7 @@ void plutovg_gradient_set_values_linear(plutovg_gradient_t* gradient, double x1,
     gradient->values[3] = y2;
 }
 
-void plutovg_gradient_set_values_radial(plutovg_gradient_t* gradient, double cx, double cy, double cr, double fx, double fy, double fr)
+void plutovg_gradient_set_values_radial(plutovg_gradient_t* gradient, const double cx, const double cy, const double cr, const double fx, const double fy, const double fr)
 {
     gradient->values[0] = cx;
     gradient->values[1] = cy;
@@ -146,7 +146,7 @@ void plutovg_gradient_set_values_radial(plutovg_gradient_t* gradient, double cx,
     gradient->values[5] = fr;
 }
 
-void plutovg_gradient_set_opacity(plutovg_gradient_t* gradient, double opacity)
+void plutovg_gradient_set_opacity(plutovg_gradient_t* gradient, const double opacity)
 {
     gradient->opacity = plutovg_clamp(opacity, 0.0, 1.0);
 }
@@ -172,7 +172,7 @@ void plutovg_gradient_destroy(plutovg_gradient_t* gradient)
     plutovg_array_destroy(gradient->stops);
 }
 
-void plutovg_texture_init(plutovg_texture_t* texture, plutovg_surface_t* surface, plutovg_texture_type_t type)
+void plutovg_texture_init(plutovg_texture_t* texture, plutovg_surface_t* surface, const plutovg_texture_type_t type)
 {
     surface = plutovg_surface_reference(surface);
     plutovg_surface_destroy(texture->surface);
@@ -182,7 +182,7 @@ void plutovg_texture_init(plutovg_texture_t* texture, plutovg_surface_t* surface
     plutovg_matrix_init_identity(&texture->matrix);
 }
 
-void plutovg_texture_set_type(plutovg_texture_t* texture, plutovg_texture_type_t type)
+void plutovg_texture_set_type(plutovg_texture_t* texture, const plutovg_texture_type_t type)
 {
     texture->type = type;
 }
@@ -214,7 +214,7 @@ plutovg_surface_t* plutovg_texture_get_surface(const plutovg_texture_t* texture)
     return texture->surface;
 }
 
-void plutovg_texture_set_opacity(plutovg_texture_t* texture, double opacity)
+void plutovg_texture_set_opacity(plutovg_texture_t* texture, const double opacity)
 {
     texture->opacity = plutovg_clamp(opacity, 0.0, 1.0);
 }

@@ -130,7 +130,7 @@ struct Rule {
 
 class RuleData {
 public:
-    RuleData(const Selector& selector, const DeclarationList& declarations, uint32_t specificity, uint32_t position)
+    RuleData(const Selector& selector, const DeclarationList& declarations, const uint32_t specificity, const uint32_t position)
         : m_selector(selector), m_declarations(declarations), m_specificity(specificity), m_position(position)
     {}
 

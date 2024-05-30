@@ -203,7 +203,7 @@ PVG_FT_END_STMNT
   /*                                                                       */
   static void
   gray_init_cells( RAS_ARG_ void*  buffer,
-                            long   byte_size )
+                   const long   byte_size )
   {
     ras.buffer      = buffer;
     ras.buffer_size = byte_size;
@@ -372,7 +372,7 @@ PVG_FT_END_STMNT
   /*                                                                       */
   static void
   gray_start_cell( RAS_ARG_ TCoord  ex,
-                            TCoord  ey )
+                   const TCoord  ey )
   {
     if ( ex > ras.max_ex )
       ex = (TCoord)( ras.max_ex );
@@ -397,11 +397,11 @@ PVG_FT_END_STMNT
   /* Render a scanline as one or more cells.                               */
   /*                                                                       */
   static void
-  gray_render_scanline( RAS_ARG_ TCoord  ey,
-                                 TPos    x1,
-                                 TCoord  y1,
-                                 TPos    x2,
-                                 TCoord  y2 )
+  gray_render_scanline( RAS_ARG_ const TCoord  ey,
+                        const TPos    x1,
+                        TCoord  y1,
+                        const TPos    x2,
+                        const TCoord  y2 )
   {
     TCoord  ex1, ex2, fx1, fx2, first, dy, delta, mod;
     TPos    p, dx;
@@ -492,8 +492,8 @@ PVG_FT_END_STMNT
   /* Render a given line as a series of scanlines.                         */
   /*                                                                       */
   static void
-  gray_render_line( RAS_ARG_ TPos  to_x,
-                             TPos  to_y )
+  gray_render_line( RAS_ARG_ const TPos  to_x,
+                    const TPos  to_y )
   {
     TCoord  ey1, ey2, fy1, fy2, first, delta, mod;
     TPos    p, dx, dy, x, x2;
@@ -1006,7 +1006,7 @@ PVG_FT_END_STMNT
 
   static int
   gray_move_to( const PVG_FT_Vector*  to,
-                PWorker           worker )
+                const PWorker           worker )
   {
     TPos  x, y;
 
@@ -1030,8 +1030,8 @@ PVG_FT_END_STMNT
   static void
   gray_hline( RAS_ARG_ TCoord  x,
                        TCoord  y,
-                       TPos    area,
-                       int     acount )
+                       const TPos    area,
+                       const int     acount )
   {
     int coverage;
 
@@ -1557,7 +1557,7 @@ PVG_FT_END_STMNT
 
 
   static int
-  gray_raster_render( RAS_ARG_ void* buffer, long buffer_size,
+  gray_raster_render( RAS_ARG_ void* buffer, const long buffer_size,
                       const PVG_FT_Raster_Params*  params )
   {
     const PVG_FT_Outline*  outline    = (const PVG_FT_Outline*)params->source;

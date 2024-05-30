@@ -48,7 +48,7 @@ typedef struct {
     int extended;
 } radial_gradient_values_t;
 
-static inline uint32_t premultiply_color(const plutovg_color_t* color, double opacity)
+static inline uint32_t premultiply_color(const plutovg_color_t* color, const double opacity)
 {
     uint32_t alpha = (uint8_t)(color->a * opacity * 255);
     uint32_t pr = (uint8_t)(color->r * alpha);
@@ -58,7 +58,7 @@ static inline uint32_t premultiply_color(const plutovg_color_t* color, double op
     return (alpha << 24) | (pr << 16) | (pg << 8) | (pb);
 }
 
-static inline uint32_t combine_opacity(const plutovg_color_t* color, double opacity)
+static inline uint32_t combine_opacity(const plutovg_color_t* color, const double opacity)
 {
     uint32_t a = (uint8_t)(color->a * opacity * 255);
     uint32_t r = (uint8_t)(color->r * 255);
@@ -68,7 +68,7 @@ static inline uint32_t combine_opacity(const plutovg_color_t* color, double opac
     return (a << 24) | (r << 16) | (g << 8) | (b);
 }
 
-static inline uint32_t premultiply_pixel(uint32_t color)
+static inline uint32_t premultiply_pixel(const uint32_t color)
 {
     uint32_t a = plutovg_alpha(color);
     uint32_t r = plutovg_red(color);
@@ -81,7 +81,7 @@ static inline uint32_t premultiply_pixel(uint32_t color)
     return (a << 24) | (pr << 16) | (pg << 8) | (pb);
 }
 
-static inline uint32_t interpolate_pixel(uint32_t x, uint32_t a, uint32_t y, uint32_t b)
+static inline uint32_t interpolate_pixel(uint32_t x, const uint32_t a, const uint32_t y, const uint32_t b)
 {
     uint32_t t = (x & 0xff00ff) * a + (y & 0xff00ff) * b;
     t = (t + ((t >> 8) & 0xff00ff) + 0x800080) >> 8;
@@ -93,7 +93,7 @@ static inline uint32_t interpolate_pixel(uint32_t x, uint32_t a, uint32_t y, uin
     return x;
 }
 
-static inline uint32_t BYTE_MUL(uint32_t x, uint32_t a)
+static inline uint32_t BYTE_MUL(uint32_t x, const uint32_t a)
 {
     uint32_t t = (x & 0xff00ff) * a;
     t = (t + ((t >> 8) & 0xff00ff) + 0x800080) >> 8;
@@ -105,7 +105,7 @@ static inline uint32_t BYTE_MUL(uint32_t x, uint32_t a)
     return x;
 }
 
-static inline void memfill32(uint32_t* dest, uint32_t value, int length)
+static inline void memfill32(uint32_t* dest, const uint32_t value, const int length)
 {
     for(int i = 0;i < length;i++)
         dest[i] = value;
@@ -138,19 +138,19 @@ static inline int gradient_clamp(const gradient_data_t* gradient, int ipos)
 
 #define FIXPT_BITS 8
 #define FIXPT_SIZE (1 << FIXPT_BITS)
-static inline uint32_t gradient_pixel_fixed(const gradient_data_t* gradient, int fixed_pos)
+static inline uint32_t gradient_pixel_fixed(const gradient_data_t* gradient, const int fixed_pos)
 {
     int ipos = (fixed_pos + (FIXPT_SIZE / 2)) >> FIXPT_BITS;
     return gradient->colortable[gradient_clamp(gradient, ipos)];
 }
 
-static inline uint32_t gradient_pixel(const gradient_data_t* gradient, double pos)
+static inline uint32_t gradient_pixel(const gradient_data_t* gradient, const double pos)
 {
     int ipos = (int)(pos * (COLOR_TABLE_SIZE - 1) + 0.5);
     return gradient->colortable[gradient_clamp(gradient, ipos)];
 }
 
-static void fetch_linear_gradient(uint32_t* buffer, const linear_gradient_values_t* v, const gradient_data_t* gradient, int y, int x, int length)
+static void fetch_linear_gradient(uint32_t* buffer, const linear_gradient_values_t* v, const gradient_data_t* gradient, const int y, const int x, const int length)
 {
     double t, inc;
     double rx = 0, ry = 0;
@@ -199,7 +199,7 @@ static void fetch_linear_gradient(uint32_t* buffer, const linear_gradient_values
     }
 }
 
-static void fetch_radial_gradient(uint32_t* buffer, const radial_gradient_values_t* v, const gradient_data_t* gradient, int y, int x, int length)
+static void fetch_radial_gradient(uint32_t* buffer, const radial_gradient_values_t* v, const gradient_data_t* gradient, const int y, const int x, const int length)
 {
     if(v->a == 0.0)
     {
@@ -276,7 +276,7 @@ static void fetch_radial_gradient(uint32_t* buffer, const radial_gradient_values
     }
 }
 
-static void composition_solid_source(uint32_t* dest, int length, uint32_t color, uint32_t alpha)
+static void composition_solid_source(uint32_t* dest, const int length, uint32_t color, const uint32_t alpha)
 {
     if(alpha == 255)
     {
@@ -291,7 +291,7 @@ static void composition_solid_source(uint32_t* dest, int length, uint32_t color,
     }
 }
 
-static void composition_solid_source_over(uint32_t* dest, int length, uint32_t color, uint32_t const_alpha)
+static void composition_solid_source_over(uint32_t* dest, const int length, uint32_t color, const uint32_t const_alpha)
 {
     if(const_alpha != 255) color = BYTE_MUL(color, const_alpha);
     uint32_t ialpha = 255 - plutovg_alpha(color);
@@ -299,7 +299,7 @@ static void composition_solid_source_over(uint32_t* dest, int length, uint32_t c
         dest[i] = color + BYTE_MUL(dest[i], ialpha);
 }
 
-static void composition_solid_destination_in(uint32_t* dest, int length, uint32_t color, uint32_t const_alpha)
+static void composition_solid_destination_in(uint32_t* dest, const int length, const uint32_t color, const uint32_t const_alpha)
 {
     uint32_t a = plutovg_alpha(color);
     if(const_alpha != 255) a = BYTE_MUL(a, const_alpha) + 255 - const_alpha;
@@ -307,7 +307,7 @@ static void composition_solid_destination_in(uint32_t* dest, int length, uint32_
         dest[i] = BYTE_MUL(dest[i], a);
 }
 
-static void composition_solid_destination_out(uint32_t* dest, int length, uint32_t color, uint32_t const_alpha)
+static void composition_solid_destination_out(uint32_t* dest, const int length, const uint32_t color, const uint32_t const_alpha)
 {
     uint32_t a = plutovg_alpha(~color);
     if(const_alpha != 255) a = BYTE_MUL(a, const_alpha) + 255 - const_alpha;
@@ -315,7 +315,7 @@ static void composition_solid_destination_out(uint32_t* dest, int length, uint32
         dest[i] = BYTE_MUL(dest[i], a);
 }
 
-static void composition_source(uint32_t* dest, int length, const uint32_t* src, uint32_t const_alpha)
+static void composition_source(uint32_t* dest, const int length, const uint32_t* src, const uint32_t const_alpha)
 {
     if(const_alpha == 255)
     {
@@ -329,7 +329,7 @@ static void composition_source(uint32_t* dest, int length, const uint32_t* src, 
     }
 }
 
-static void composition_source_over(uint32_t* dest, int length, const uint32_t* src, uint32_t const_alpha)
+static void composition_source_over(uint32_t* dest, const int length, const uint32_t* src, const uint32_t const_alpha)
 {
     uint32_t s, sia;
     if(const_alpha == 255)
@@ -357,7 +357,7 @@ static void composition_source_over(uint32_t* dest, int length, const uint32_t* 
     }
 }
 
-static void composition_destination_in(uint32_t* dest, int length, const uint32_t* src, uint32_t const_alpha)
+static void composition_destination_in(uint32_t* dest, const int length, const uint32_t* src, const uint32_t const_alpha)
 {
     if(const_alpha == 255)
     {
@@ -376,7 +376,7 @@ static void composition_destination_in(uint32_t* dest, int length, const uint32_
     }
 }
 
-static void composition_destination_out(uint32_t* dest, int length, const uint32_t* src, uint32_t const_alpha)
+static void composition_destination_out(uint32_t* dest, const int length, const uint32_t* src, const uint32_t const_alpha)
 {
     if(const_alpha == 255)
     {
@@ -412,7 +412,7 @@ static const composition_function_t composition_map[] = {
     composition_destination_out
 };
 
-static void blend_solid(plutovg_surface_t* surface, plutovg_operator_t op, const plutovg_rle_t* rle, uint32_t solid)
+static void blend_solid(plutovg_surface_t* surface, const plutovg_operator_t op, const plutovg_rle_t* rle, const uint32_t solid)
 {
     composition_solid_function_t func = composition_solid_map[op];
     int count = rle->spans.size;
@@ -426,7 +426,7 @@ static void blend_solid(plutovg_surface_t* surface, plutovg_operator_t op, const
 }
 
 #define BUFFER_SIZE 1024
-static void blend_linear_gradient(plutovg_surface_t* surface, plutovg_operator_t op, const plutovg_rle_t* rle, const gradient_data_t* gradient)
+static void blend_linear_gradient(plutovg_surface_t* surface, const plutovg_operator_t op, const plutovg_rle_t* rle, const gradient_data_t* gradient)
 {
     composition_function_t func = composition_map[op];
     unsigned int buffer[BUFFER_SIZE];
@@ -463,7 +463,7 @@ static void blend_linear_gradient(plutovg_surface_t* surface, plutovg_operator_t
     }
 }
 
-static void blend_radial_gradient(plutovg_surface_t* surface, plutovg_operator_t op, const plutovg_rle_t* rle, const gradient_data_t* gradient)
+static void blend_radial_gradient(plutovg_surface_t* surface, const plutovg_operator_t op, const plutovg_rle_t* rle, const gradient_data_t* gradient)
 {
     composition_function_t func = composition_map[op];
     unsigned int buffer[BUFFER_SIZE];
@@ -498,7 +498,7 @@ static void blend_radial_gradient(plutovg_surface_t* surface, plutovg_operator_t
 }
 
 #define FIXED_SCALE (1 << 16)
-static void blend_transformed_argb(plutovg_surface_t* surface, plutovg_operator_t op, const plutovg_rle_t* rle, const texture_data_t* texture)
+static void blend_transformed_argb(plutovg_surface_t* surface, const plutovg_operator_t op, const plutovg_rle_t* rle, const texture_data_t* texture)
 {
     composition_function_t func = composition_map[op];
     uint32_t buffer[BUFFER_SIZE];
@@ -548,7 +548,7 @@ static void blend_transformed_argb(plutovg_surface_t* surface, plutovg_operator_
     }
 }
 
-static void blend_untransformed_argb(plutovg_surface_t* surface, plutovg_operator_t op, const plutovg_rle_t* rle, const texture_data_t* texture)
+static void blend_untransformed_argb(plutovg_surface_t* surface, const plutovg_operator_t op, const plutovg_rle_t* rle, const texture_data_t* texture)
 {
     composition_function_t func = composition_map[op];
 
@@ -588,7 +588,7 @@ static void blend_untransformed_argb(plutovg_surface_t* surface, plutovg_operato
     }
 }
 
-static void blend_untransformed_tiled_argb(plutovg_surface_t* surface, plutovg_operator_t op, const plutovg_rle_t* rle, const texture_data_t* texture)
+static void blend_untransformed_tiled_argb(plutovg_surface_t* surface, const plutovg_operator_t op, const plutovg_rle_t* rle, const texture_data_t* texture)
 {
     composition_function_t func = composition_map[op];
 
@@ -634,7 +634,7 @@ static void blend_untransformed_tiled_argb(plutovg_surface_t* surface, plutovg_o
     }
 }
 
-static void blend_transformed_tiled_argb(plutovg_surface_t* surface, plutovg_operator_t op, const plutovg_rle_t* rle, const texture_data_t* texture)
+static void blend_transformed_tiled_argb(plutovg_surface_t* surface, const plutovg_operator_t op, const plutovg_rle_t* rle, const texture_data_t* texture)
 {
     composition_function_t func = composition_map[op];
     uint32_t buffer[BUFFER_SIZE];

@@ -11,13 +11,13 @@ const Color Color::Black(0xFF000000);
 const Color Color::White(0xFFFFFFFF);
 const Color Color::Transparent(0x00000000);
 
-Color& Color::combine(double opacity)
+Color& Color::combine(const double opacity)
 {
     *this = combined(opacity);
     return *this;
 }
 
-Color Color::combined(double opacity) const
+Color Color::combined(const double opacity) const
 {
     auto rgb = m_value & 0x00FFFFFF;
     auto a = static_cast<int>(clamp(opacity * alpha(), 0.0, 255.0));
@@ -34,7 +34,7 @@ Paint::Paint(const std::string& ref, const Color& color)
 {
 }
 
-Point::Point(double x, double y)
+Point::Point(const double x, const double y)
     : x(x), y(y)
 {
 }
@@ -42,7 +42,7 @@ Point::Point(double x, double y)
 const Rect Rect::Empty{0, 0, 0, 0};
 const Rect Rect::Invalid{0, 0, -1, -1};
 
-Rect::Rect(double x, double y, double w, double h)
+Rect::Rect(const double x, const double y, const double w, const double h)
     : x(x), y(y), w(w), h(h)
 {
 }
@@ -98,7 +98,7 @@ Rect& Rect::unite(const Rect& rect)
 
 const Transform Transform::Identity(1, 0, 0, 1, 0, 0);
 
-Transform::Transform(double m00, double m10, double m01, double m11, double m02, double m12)
+Transform::Transform(const double m00, const double m10, const double m01, const double m11, const double m02, const double m12)
     : m00(m00), m10(m10), m01(m01), m11(m11), m02(m02), m12(m12)
 {
 }
@@ -155,37 +155,37 @@ Transform& Transform::postmultiply(const Transform& transform)
     return *this;
 }
 
-Transform& Transform::rotate(double angle)
+Transform& Transform::rotate(const double angle)
 {
     *this = rotated(angle) * *this;
     return *this;
 }
 
-Transform& Transform::rotate(double angle, double cx, double cy)
+Transform& Transform::rotate(const double angle, const double cx, const double cy)
 {
     *this = rotated(angle, cx, cy) * *this;
     return *this;
 }
 
-Transform& Transform::scale(double sx, double sy)
+Transform& Transform::scale(const double sx, const double sy)
 {
     *this = scaled(sx, sy) * *this;
     return *this;
 }
 
-Transform& Transform::shear(double shx, double shy)
+Transform& Transform::shear(const double shx, const double shy)
 {
     *this = sheared(shx, shy) * *this;
     return *this;
 }
 
-Transform& Transform::translate(double tx, double ty)
+Transform& Transform::translate(const double tx, const double ty)
 {
     *this = translated(tx, ty) * *this;
     return *this;
 }
 
-Transform& Transform::transform(double _m00, double _m10, double _m01, double _m11, double _m02, double _m12)
+Transform& Transform::transform(const double _m00, const double _m10, const double _m01, const double _m11, const double _m02, const double _m12)
 {
     *this = Transform{_m00, _m10, _m01, _m11, _m02, _m12} * *this;
     return *this;
@@ -203,7 +203,7 @@ Transform& Transform::invert()
     return *this;
 }
 
-void Transform::map(double x, double y, double* _x, double* _y) const
+void Transform::map(const double x, const double y, double* _x, double* _y) const
 {
     *_x = x * m00 + y * m01 + m02;
     *_y = x * m10 + y * m11 + m12;
@@ -252,7 +252,7 @@ Rect Transform::map(const Rect& rect) const
 
 static const double pi = 3.14159265358979323846;
 
-Transform Transform::rotated(double angle)
+Transform Transform::rotated(const double angle)
 {
     auto c = std::cos(angle * pi / 180.0);
     auto s = std::sin(angle * pi / 180.0);
@@ -260,7 +260,7 @@ Transform Transform::rotated(double angle)
     return Transform{c, s, -s, c, 0, 0};
 }
 
-Transform Transform::rotated(double angle, double cx, double cy)
+Transform Transform::rotated(const double angle, const double cx, const double cy)
 {
     auto c = std::cos(angle * pi / 180.0);
     auto s = std::sin(angle * pi / 180.0);
@@ -271,12 +271,12 @@ Transform Transform::rotated(double angle, double cx, double cy)
     return Transform{c, s, -s, c, x, y};
 }
 
-Transform Transform::scaled(double sx, double sy)
+Transform Transform::scaled(const double sx, const double sy)
 {
     return Transform{sx, 0, 0, sy, 0, 0};
 }
 
-Transform Transform::sheared(double shx, double shy)
+Transform Transform::sheared(const double shx, const double shy)
 {
     auto x = std::tan(shx * pi / 180.0);
     auto y = std::tan(shy * pi / 180.0);
@@ -284,7 +284,7 @@ Transform Transform::sheared(double shx, double shy)
     return Transform{1, y, x, 1, 0, 0};
 }
 
-Transform Transform::translated(double tx, double ty)
+Transform Transform::translated(const double tx, const double ty)
 {
     return Transform{1, 0, 0, 1, tx, ty};
 }
@@ -331,7 +331,7 @@ bool Path::empty() const
     return m_commands.empty();
 }
 
-void Path::quadTo(double cx, double cy, double x1, double y1, double x2, double y2)
+void Path::quadTo(const double cx, const double cy, const double x1, const double y1, const double x2, const double y2)
 {
     auto cx1 = 2.0 / 3.0 * x1 + 1.0 / 3.0 * cx;
     auto cy1 = 2.0 / 3.0 * y1 + 1.0 / 3.0 * cy;
@@ -340,7 +340,7 @@ void Path::quadTo(double cx, double cy, double x1, double y1, double x2, double 
     cubicTo(cx1, cy1, cx2, cy2, x2, y2);
 }
 
-void Path::arcTo(double cx, double cy, double rx, double ry, double xAxisRotation, bool largeArcFlag, bool sweepFlag, double x, double y)
+void Path::arcTo(const double cx, const double cy, double rx, double ry, const double xAxisRotation, const bool largeArcFlag, const bool sweepFlag, const double x, const double y)
 {
     rx = std::fabs(rx);
     ry = std::fabs(ry);
@@ -418,7 +418,7 @@ void Path::arcTo(double cx, double cy, double rx, double ry, double xAxisRotatio
 
 static const double kappa = 0.55228474983079339840;
 
-void Path::ellipse(double cx, double cy, double rx, double ry)
+void Path::ellipse(const double cx, const double cy, const double rx, const double ry)
 {
     auto left = cx - rx;
     auto top = cy - ry;
@@ -436,7 +436,7 @@ void Path::ellipse(double cx, double cy, double rx, double ry)
     close();
 }
 
-void Path::rect(double x, double y, double w, double h, double rx, double ry)
+void Path::rect(const double x, const double y, const double w, const double h, double rx, double ry)
 {
     rx = std::min(rx, w * 0.5);
     ry = std::min(ry, h * 0.5);
@@ -548,19 +548,19 @@ const Length Length::FiftyPercent{50, LengthUnits::Percent};
 const Length Length::OneTwentyPercent{120, LengthUnits::Percent};
 const Length Length::MinusTenPercent{-10, LengthUnits::Percent};
 
-Length::Length(double value)
+Length::Length(const double value)
     : m_value(value)
 {
 }
 
-Length::Length(double value, LengthUnits units)
+Length::Length(const double value, const LengthUnits units)
     : m_value(value), m_units(units)
 {
 }
 
 static const double dpi = 96.0;
 
-double Length::value(double max) const
+double Length::value(const double max) const
 {
     switch(m_units) {
     case LengthUnits::Number:
@@ -587,7 +587,7 @@ double Length::value(double max) const
 
 static const double sqrt2 = 1.41421356237309504880;
 
-double Length::value(const Element* element, LengthMode mode) const
+double Length::value(const Element* element, const LengthMode mode) const
 {
     if(m_units == LengthUnits::Percent) {
         auto viewport = element->currentViewport();
@@ -605,24 +605,24 @@ LengthContext::LengthContext(const Element* element)
 {
 }
 
-LengthContext::LengthContext(const Element* element, Units units)
+LengthContext::LengthContext(const Element* element, const Units units)
     : m_element(element), m_units(units)
 {
 }
 
-double LengthContext::valueForLength(const Length& length, LengthMode mode) const
+double LengthContext::valueForLength(const Length& length, const LengthMode mode) const
 {
     if(m_units == Units::ObjectBoundingBox)
         return length.value(1.0);
     return length.value(m_element, mode);
 }
 
-PreserveAspectRatio::PreserveAspectRatio(Align align, MeetOrSlice scale)
+PreserveAspectRatio::PreserveAspectRatio(const Align align, const MeetOrSlice scale)
     : m_align(align), m_scale(scale)
 {
 }
 
-Transform PreserveAspectRatio::getMatrix(double width, double height, const Rect& viewBox) const
+Transform PreserveAspectRatio::getMatrix(const double width, const double height, const Rect& viewBox) const
 {
     if(viewBox.empty())
         return Transform{};
@@ -675,7 +675,7 @@ Transform PreserveAspectRatio::getMatrix(double width, double height, const Rect
     return Transform{scale, 0, 0, scale, xoffset, yoffset};
 }
 
-Rect PreserveAspectRatio::getClip(double width, double height, const Rect& viewBox) const
+Rect PreserveAspectRatio::getClip(const double width, const double height, const Rect& viewBox) const
 {
     if(viewBox.empty())
         return Rect{0, 0, width, height};
@@ -719,12 +719,12 @@ Rect PreserveAspectRatio::getClip(double width, double height, const Rect& viewB
     return Rect(-xOffset / scale, -yOffset / scale, width / scale, height / scale);
 }
 
-Angle::Angle(MarkerOrient type)
+Angle::Angle(const MarkerOrient type)
     : m_type(type)
 {
 }
 
-Angle::Angle(double value, MarkerOrient type)
+Angle::Angle(const double value, const MarkerOrient type)
     : m_value(value), m_type(type)
 {
 }

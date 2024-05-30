@@ -65,8 +65,8 @@ constexpr const T& clamp(const T& val, const T& lo, const T& hi)
 class Color {
 public:
     Color() = default;
-    explicit Color(uint32_t value) : m_value(value) {}
-    Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) : m_value(a << 24 | r << 16 | g << 8 | b) {}
+    explicit Color(const uint32_t value) : m_value(value) {}
+    Color(const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a) : m_value(a << 24 | r << 16 | g << 8 | b) {}
 
     uint8_t alpha() const { return (m_value >> 24) & 0xff; }
     uint8_t red() const { return (m_value >> 16) & 0xff; }

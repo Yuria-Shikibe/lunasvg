@@ -124,7 +124,7 @@ inline bool skipWsComma(const char*& ptr, const char* end)
     return skipWsDelimiter(ptr, end, ',');
 }
 
-inline bool isIntegralDigit(char ch, int base)
+inline bool isIntegralDigit(const char ch, const int base)
 {
     if(IS_NUM(ch))
         return ch - '0' < base;

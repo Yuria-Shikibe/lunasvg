@@ -7,7 +7,7 @@
 #include <limits.h>
 
 #define ALIGN_SIZE(size) (((size) + 7ul) & ~7ul)
-static void ft_outline_init(PVG_FT_Outline* outline, plutovg_t* pluto, int points, int contours)
+static void ft_outline_init(PVG_FT_Outline* outline, plutovg_t* pluto, const int points, const int contours)
 {
     size_t size_a = ALIGN_SIZE((points + contours) * sizeof(PVG_FT_Vector));
     size_t size_b = ALIGN_SIZE((points + contours) * sizeof(char));
@@ -34,7 +34,7 @@ static void ft_outline_init(PVG_FT_Outline* outline, plutovg_t* pluto, int point
 }
 
 #define FT_COORD(x) (PVG_FT_Pos)((x) * 64)
-static void ft_outline_move_to(PVG_FT_Outline* ft, double x, double y)
+static void ft_outline_move_to(PVG_FT_Outline* ft, const double x, const double y)
 {
     ft->points[ft->n_points].x = FT_COORD(x);
     ft->points[ft->n_points].y = FT_COORD(y);
@@ -48,7 +48,7 @@ static void ft_outline_move_to(PVG_FT_Outline* ft, double x, double y)
     ft->n_points++;
 }
 
-static void ft_outline_line_to(PVG_FT_Outline* ft, double x, double y)
+static void ft_outline_line_to(PVG_FT_Outline* ft, const double x, const double y)
 {
     ft->points[ft->n_points].x = FT_COORD(x);
     ft->points[ft->n_points].y = FT_COORD(y);
@@ -56,7 +56,7 @@ static void ft_outline_line_to(PVG_FT_Outline* ft, double x, double y)
     ft->n_points++;
 }
 
-static void ft_outline_cubic_to(PVG_FT_Outline* ft, double x1, double y1, double x2, double y2, double x3, double y3)
+static void ft_outline_cubic_to(PVG_FT_Outline* ft, const double x1, const double y1, const double x2, const double y2, const double x3, const double y3)
 {
     ft->points[ft->n_points].x = FT_COORD(x1);
     ft->points[ft->n_points].y = FT_COORD(y1);
@@ -137,7 +137,7 @@ static void ft_outline_convert_dash(PVG_FT_Outline* outline, plutovg_t* pluto, c
     plutovg_path_destroy(dashed);
 }
 
-static void generation_callback(int count, const PVG_FT_Span* spans, void* user)
+static void generation_callback(const int count, const PVG_FT_Span* spans, void* user)
 {
     plutovg_rle_t* rle = user;
     plutovg_array_ensure(rle->spans, count);
@@ -166,7 +166,7 @@ void plutovg_rle_destroy(plutovg_rle_t* rle)
     free(rle);
 }
 
-void plutovg_rle_rasterize(plutovg_t* pluto, plutovg_rle_t* rle, const plutovg_path_t* path, const plutovg_matrix_t* matrix, const plutovg_rect_t* clip, const plutovg_stroke_data_t* stroke, plutovg_fill_rule_t winding)
+void plutovg_rle_rasterize(plutovg_t* pluto, plutovg_rle_t* rle, const plutovg_path_t* path, const plutovg_matrix_t* matrix, const plutovg_rect_t* clip, const plutovg_stroke_data_t* stroke, const plutovg_fill_rule_t winding)
 {
     PVG_FT_Raster_Params params;
     params.flags = PVG_FT_RASTER_FLAG_DIRECT | PVG_FT_RASTER_FLAG_AA;

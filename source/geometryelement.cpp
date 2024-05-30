@@ -4,7 +4,7 @@
 
 namespace lunasvg {
 
-GeometryElement::GeometryElement(ElementID id)
+GeometryElement::GeometryElement(const ElementID id)
     : GraphicsElement(id)
 {
 }
@@ -47,7 +47,7 @@ Path PathElement::path() const
     return d();
 }
 
-PolyElement::PolyElement(ElementID id)
+PolyElement::PolyElement(const ElementID id)
     : GeometryElement(id)
 {
 }

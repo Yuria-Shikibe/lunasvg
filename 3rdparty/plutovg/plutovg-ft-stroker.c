@@ -38,7 +38,7 @@
 
 #define PVG_FT_IS_SMALL(x) ((x) > -PVG_FT_EPSILON && (x) < PVG_FT_EPSILON)
 
-static PVG_FT_Pos ft_pos_abs(PVG_FT_Pos x)
+static PVG_FT_Pos ft_pos_abs(const PVG_FT_Pos x)
 {
     return x >= 0 ? x : -x;
 }
@@ -132,7 +132,7 @@ static void ft_cubic_split(PVG_FT_Vector* base)
 /* Return the average of `angle1' and `angle2'.            */
 /* This gives correct result even if `angle1' and `angle2' */
 /* have opposite signs.                                    */
-static PVG_FT_Angle ft_angle_mean(PVG_FT_Angle angle1, PVG_FT_Angle angle2)
+static PVG_FT_Angle ft_angle_mean(const PVG_FT_Angle angle1, const PVG_FT_Angle angle2)
 {
     return angle1 + PVG_FT_Angle_Diff(angle1, angle2) / 2;
 }
@@ -309,8 +309,8 @@ void PVG_FT_Outline_Get_CBox(const PVG_FT_Outline* outline, PVG_FT_BBox* acbox)
     }
 }
 
-static PVG_FT_Error ft_stroke_border_grow(PVG_FT_StrokeBorder border,
-                                         PVG_FT_UInt         new_points)
+static PVG_FT_Error ft_stroke_border_grow(const PVG_FT_StrokeBorder border,
+                                          const PVG_FT_UInt         new_points)
 {
     PVG_FT_UInt  old_max = border->max_points;
     PVG_FT_UInt  new_max = border->num_points + new_points;
@@ -335,8 +335,8 @@ Exit:
     return error;
 }
 
-static void ft_stroke_border_close(PVG_FT_StrokeBorder border,
-                                   PVG_FT_Bool         reverse)
+static void ft_stroke_border_close(const PVG_FT_StrokeBorder border,
+                                   const PVG_FT_Bool         reverse)
 {
     PVG_FT_UInt start = border->start;
     PVG_FT_UInt count = border->num_points;
@@ -391,8 +391,8 @@ static void ft_stroke_border_close(PVG_FT_StrokeBorder border,
     border->movable = FALSE;
 }
 
-static PVG_FT_Error ft_stroke_border_lineto(PVG_FT_StrokeBorder border,
-                                           PVG_FT_Vector* to, PVG_FT_Bool movable)
+static PVG_FT_Error ft_stroke_border_lineto(const PVG_FT_StrokeBorder border,
+                                            PVG_FT_Vector* to, const PVG_FT_Bool movable)
 {
     PVG_FT_Error error = 0;
 
@@ -424,9 +424,9 @@ static PVG_FT_Error ft_stroke_border_lineto(PVG_FT_StrokeBorder border,
     return error;
 }
 
-static PVG_FT_Error ft_stroke_border_conicto(PVG_FT_StrokeBorder border,
-                                            PVG_FT_Vector*      control,
-                                            PVG_FT_Vector*      to)
+static PVG_FT_Error ft_stroke_border_conicto(const PVG_FT_StrokeBorder border,
+                                             PVG_FT_Vector*      control,
+                                             PVG_FT_Vector*      to)
 {
     PVG_FT_Error error;
 
@@ -451,10 +451,10 @@ static PVG_FT_Error ft_stroke_border_conicto(PVG_FT_StrokeBorder border,
     return error;
 }
 
-static PVG_FT_Error ft_stroke_border_cubicto(PVG_FT_StrokeBorder border,
-                                            PVG_FT_Vector*      control1,
-                                            PVG_FT_Vector*      control2,
-                                            PVG_FT_Vector*      to)
+static PVG_FT_Error ft_stroke_border_cubicto(const PVG_FT_StrokeBorder border,
+                                             PVG_FT_Vector*      control1,
+                                             PVG_FT_Vector*      control2,
+                                             PVG_FT_Vector*      to)
 {
     PVG_FT_Error error;
 
@@ -485,11 +485,11 @@ static PVG_FT_Error ft_stroke_border_cubicto(PVG_FT_StrokeBorder border,
 
 
 static PVG_FT_Error
-ft_stroke_border_arcto( PVG_FT_StrokeBorder  border,
-                        PVG_FT_Vector*       center,
-                        PVG_FT_Fixed         radius,
-                        PVG_FT_Angle         angle_start,
-                        PVG_FT_Angle         angle_diff )
+ft_stroke_border_arcto(const PVG_FT_StrokeBorder  border,
+                       PVG_FT_Vector*       center,
+                       const PVG_FT_Fixed         radius,
+                       const PVG_FT_Angle         angle_start,
+                       const PVG_FT_Angle         angle_diff )
 {
     PVG_FT_Fixed   coef;
     PVG_FT_Vector  a0, a1, a2, a3;
@@ -542,8 +542,8 @@ ft_stroke_border_arcto( PVG_FT_StrokeBorder  border,
     return error;
 }
 
-static PVG_FT_Error ft_stroke_border_moveto(PVG_FT_StrokeBorder border,
-                                           PVG_FT_Vector*      to)
+static PVG_FT_Error ft_stroke_border_moveto(const PVG_FT_StrokeBorder border,
+                                            PVG_FT_Vector*      to)
 {
     /* close current open path if any ? */
     if (border->start >= 0) ft_stroke_border_close(border, FALSE);
@@ -554,7 +554,7 @@ static PVG_FT_Error ft_stroke_border_moveto(PVG_FT_StrokeBorder border,
     return ft_stroke_border_lineto(border, to, FALSE);
 }
 
-static void ft_stroke_border_init(PVG_FT_StrokeBorder border)
+static void ft_stroke_border_init(const PVG_FT_StrokeBorder border)
 {
     border->points = NULL;
     border->tags = NULL;
@@ -565,14 +565,14 @@ static void ft_stroke_border_init(PVG_FT_StrokeBorder border)
     border->valid = FALSE;
 }
 
-static void ft_stroke_border_reset(PVG_FT_StrokeBorder border)
+static void ft_stroke_border_reset(const PVG_FT_StrokeBorder border)
 {
     border->num_points = 0;
     border->start = -1;
     border->valid = FALSE;
 }
 
-static void ft_stroke_border_done(PVG_FT_StrokeBorder border)
+static void ft_stroke_border_done(const PVG_FT_StrokeBorder border)
 {
     free(border->points);
     free(border->tags);
@@ -583,9 +583,9 @@ static void ft_stroke_border_done(PVG_FT_StrokeBorder border)
     border->valid = FALSE;
 }
 
-static PVG_FT_Error ft_stroke_border_get_counts(PVG_FT_StrokeBorder border,
-                                               PVG_FT_UInt*        anum_points,
-                                               PVG_FT_UInt*        anum_contours)
+static PVG_FT_Error ft_stroke_border_get_counts(const PVG_FT_StrokeBorder border,
+                                                PVG_FT_UInt*        anum_points,
+                                                PVG_FT_UInt*        anum_contours)
 {
     PVG_FT_Error error = 0;
     PVG_FT_UInt  num_points = 0;
@@ -625,7 +625,7 @@ Fail:
     goto Exit;
 }
 
-static void ft_stroke_border_export(PVG_FT_StrokeBorder border,
+static void ft_stroke_border_export(const PVG_FT_StrokeBorder border,
                                     PVG_FT_Outline*     outline)
 {
     /* copy point locations */
@@ -720,7 +720,7 @@ PVG_FT_Error PVG_FT_Stroker_New(PVG_FT_Stroker* astroker)
     return error;
 }
 
-void PVG_FT_Stroker_Rewind(PVG_FT_Stroker stroker)
+void PVG_FT_Stroker_Rewind(const PVG_FT_Stroker stroker)
 {
     if (stroker) {
         ft_stroke_border_reset(&stroker->borders[0]);
@@ -730,10 +730,10 @@ void PVG_FT_Stroker_Rewind(PVG_FT_Stroker stroker)
 
 /* documentation is in ftstroke.h */
 
-void PVG_FT_Stroker_Set(PVG_FT_Stroker stroker, PVG_FT_Fixed radius,
-                       PVG_FT_Stroker_LineCap  line_cap,
-                       PVG_FT_Stroker_LineJoin line_join,
-                       PVG_FT_Fixed            miter_limit)
+void PVG_FT_Stroker_Set(const PVG_FT_Stroker stroker, const PVG_FT_Fixed radius,
+                        const PVG_FT_Stroker_LineCap  line_cap,
+                        const PVG_FT_Stroker_LineJoin line_join,
+                        const PVG_FT_Fixed            miter_limit)
 {
     stroker->radius = radius;
     stroker->line_cap = line_cap;
@@ -752,7 +752,7 @@ void PVG_FT_Stroker_Set(PVG_FT_Stroker stroker, PVG_FT_Fixed radius,
 
 /* documentation is in ftstroke.h */
 
-void PVG_FT_Stroker_Done(PVG_FT_Stroker stroker)
+void PVG_FT_Stroker_Done(const PVG_FT_Stroker stroker)
 {
     if (stroker) {
         ft_stroke_border_done(&stroker->borders[0]);
@@ -763,7 +763,7 @@ void PVG_FT_Stroker_Done(PVG_FT_Stroker stroker)
 }
 
 /* create a circular arc at a corner or cap */
-static PVG_FT_Error ft_stroker_arcto(PVG_FT_Stroker stroker, PVG_FT_Int side)
+static PVG_FT_Error ft_stroker_arcto(const PVG_FT_Stroker stroker, const PVG_FT_Int side)
 {
     PVG_FT_Angle        total, rotate;
     PVG_FT_Fixed        radius = stroker->radius;
@@ -783,9 +783,9 @@ static PVG_FT_Error ft_stroker_arcto(PVG_FT_Stroker stroker, PVG_FT_Int side)
 
 /* add a cap at the end of an opened path */
 static PVG_FT_Error
-ft_stroker_cap(PVG_FT_Stroker stroker,
-               PVG_FT_Angle angle,
-               PVG_FT_Int side)
+ft_stroker_cap(const PVG_FT_Stroker stroker,
+               const PVG_FT_Angle angle,
+               const PVG_FT_Int side)
 {
     PVG_FT_Error error = 0;
 
@@ -839,8 +839,8 @@ Exit:
 }
 
 /* process an inside corner, i.e. compute intersection */
-static PVG_FT_Error ft_stroker_inside(PVG_FT_Stroker stroker, PVG_FT_Int side,
-                                     PVG_FT_Fixed line_length)
+static PVG_FT_Error ft_stroker_inside(const PVG_FT_Stroker stroker, const PVG_FT_Int side,
+                                      const PVG_FT_Fixed line_length)
 {
     PVG_FT_StrokeBorder border = stroker->borders + side;
     PVG_FT_Angle        phi, theta, rotate;
@@ -898,9 +898,9 @@ static PVG_FT_Error ft_stroker_inside(PVG_FT_Stroker stroker, PVG_FT_Int side,
 
   /* process an outside corner, i.e. compute bevel/miter/round */
 static PVG_FT_Error
-ft_stroker_outside( PVG_FT_Stroker  stroker,
-                    PVG_FT_Int      side,
-                    PVG_FT_Fixed    line_length )
+ft_stroker_outside(const PVG_FT_Stroker  stroker,
+                   const PVG_FT_Int      side,
+                   const PVG_FT_Fixed    line_length )
 {
     PVG_FT_StrokeBorder  border = stroker->borders + side;
     PVG_FT_Error         error;
@@ -1049,8 +1049,8 @@ ft_stroker_outside( PVG_FT_Stroker  stroker,
     return error;
 }
 
-static PVG_FT_Error ft_stroker_process_corner(PVG_FT_Stroker stroker,
-                                             PVG_FT_Fixed   line_length)
+static PVG_FT_Error ft_stroker_process_corner(const PVG_FT_Stroker stroker,
+                                              const PVG_FT_Fixed   line_length)
 {
     PVG_FT_Error error = 0;
     PVG_FT_Angle turn;
@@ -1080,9 +1080,9 @@ Exit:
 
 /* add two points to the left and right borders corresponding to the */
 /* start of the subpath                                              */
-static PVG_FT_Error ft_stroker_subpath_start(PVG_FT_Stroker stroker,
-                                            PVG_FT_Angle   start_angle,
-                                            PVG_FT_Fixed   line_length)
+static PVG_FT_Error ft_stroker_subpath_start(const PVG_FT_Stroker stroker,
+                                             const PVG_FT_Angle   start_angle,
+                                             const PVG_FT_Fixed   line_length)
 {
     PVG_FT_Vector       delta;
     PVG_FT_Vector       point;
@@ -1117,7 +1117,7 @@ Exit:
 
 /* documentation is in ftstroke.h */
 
-PVG_FT_Error PVG_FT_Stroker_LineTo(PVG_FT_Stroker stroker, PVG_FT_Vector* to)
+PVG_FT_Error PVG_FT_Stroker_LineTo(const PVG_FT_Stroker stroker, PVG_FT_Vector* to)
 {
     PVG_FT_Error        error = 0;
     PVG_FT_StrokeBorder border;
@@ -1177,8 +1177,8 @@ Exit:
 
 /* documentation is in ftstroke.h */
 
-PVG_FT_Error PVG_FT_Stroker_ConicTo(PVG_FT_Stroker stroker, PVG_FT_Vector* control,
-                                  PVG_FT_Vector* to)
+PVG_FT_Error PVG_FT_Stroker_ConicTo(const PVG_FT_Stroker stroker, PVG_FT_Vector* control,
+                                    PVG_FT_Vector* to)
 {
     PVG_FT_Error   error = 0;
     PVG_FT_Vector  bez_stack[34];
@@ -1350,8 +1350,8 @@ Exit:
 
 /* documentation is in ftstroke.h */
 
-PVG_FT_Error PVG_FT_Stroker_CubicTo(PVG_FT_Stroker stroker, PVG_FT_Vector* control1,
-                                  PVG_FT_Vector* control2, PVG_FT_Vector* to)
+PVG_FT_Error PVG_FT_Stroker_CubicTo(const PVG_FT_Stroker stroker, PVG_FT_Vector* control1,
+                                    PVG_FT_Vector* control2, PVG_FT_Vector* to)
 {
     PVG_FT_Error   error = 0;
     PVG_FT_Vector  bez_stack[37];
@@ -1534,8 +1534,8 @@ Exit:
 
 /* documentation is in ftstroke.h */
 
-PVG_FT_Error PVG_FT_Stroker_BeginSubPath(PVG_FT_Stroker stroker, PVG_FT_Vector* to,
-                                       PVG_FT_Bool open)
+PVG_FT_Error PVG_FT_Stroker_BeginSubPath(const PVG_FT_Stroker stroker, PVG_FT_Vector* to,
+                                         const PVG_FT_Bool open)
 {
     /* We cannot process the first point, because there is not enough      */
     /* information regarding its corner/cap.  The latter will be processed */
@@ -1563,8 +1563,8 @@ PVG_FT_Error PVG_FT_Stroker_BeginSubPath(PVG_FT_Stroker stroker, PVG_FT_Vector* 
     return 0;
 }
 
-static PVG_FT_Error ft_stroker_add_reverse_left(PVG_FT_Stroker stroker,
-                                               PVG_FT_Bool    open)
+static PVG_FT_Error ft_stroker_add_reverse_left(const PVG_FT_Stroker stroker,
+                                                const PVG_FT_Bool    open)
 {
     PVG_FT_StrokeBorder right = stroker->borders + 0;
     PVG_FT_StrokeBorder left = stroker->borders + 1;
@@ -1621,7 +1621,7 @@ Exit:
 /* documentation is in ftstroke.h */
 
 /* there's a lot of magic in this function! */
-PVG_FT_Error PVG_FT_Stroker_EndSubPath(PVG_FT_Stroker stroker)
+PVG_FT_Error PVG_FT_Stroker_EndSubPath(const PVG_FT_Stroker stroker)
 {
     PVG_FT_Error error = 0;
 
@@ -1691,10 +1691,10 @@ Exit:
 
 /* documentation is in ftstroke.h */
 
-PVG_FT_Error PVG_FT_Stroker_GetBorderCounts(PVG_FT_Stroker       stroker,
-                                          PVG_FT_StrokerBorder border,
-                                          PVG_FT_UInt*         anum_points,
-                                          PVG_FT_UInt*         anum_contours)
+PVG_FT_Error PVG_FT_Stroker_GetBorderCounts(const PVG_FT_Stroker       stroker,
+                                            const PVG_FT_StrokerBorder border,
+                                            PVG_FT_UInt*         anum_points,
+                                            PVG_FT_UInt*         anum_contours)
 {
     PVG_FT_UInt  num_points = 0, num_contours = 0;
     PVG_FT_Error error;
@@ -1716,9 +1716,9 @@ Exit:
 
 /* documentation is in ftstroke.h */
 
-PVG_FT_Error PVG_FT_Stroker_GetCounts(PVG_FT_Stroker stroker,
-                                    PVG_FT_UInt*   anum_points,
-                                    PVG_FT_UInt*   anum_contours)
+PVG_FT_Error PVG_FT_Stroker_GetCounts(const PVG_FT_Stroker stroker,
+                                      PVG_FT_UInt*   anum_points,
+                                      PVG_FT_UInt*   anum_contours)
 {
     PVG_FT_UInt  count1, count2, num_points = 0;
     PVG_FT_UInt  count3, count4, num_contours = 0;
@@ -1741,9 +1741,9 @@ Exit:
 
 /* documentation is in ftstroke.h */
 
-void PVG_FT_Stroker_ExportBorder(PVG_FT_Stroker       stroker,
-                                PVG_FT_StrokerBorder border,
-                                PVG_FT_Outline*      outline)
+void PVG_FT_Stroker_ExportBorder(const PVG_FT_Stroker       stroker,
+                                 const PVG_FT_StrokerBorder border,
+                                 PVG_FT_Outline*      outline)
 {
     if (border == PVG_FT_STROKER_BORDER_LEFT ||
         border == PVG_FT_STROKER_BORDER_RIGHT) {
@@ -1755,7 +1755,7 @@ void PVG_FT_Stroker_ExportBorder(PVG_FT_Stroker       stroker,
 
 /* documentation is in ftstroke.h */
 
-void PVG_FT_Stroker_Export(PVG_FT_Stroker stroker, PVG_FT_Outline* outline)
+void PVG_FT_Stroker_Export(const PVG_FT_Stroker stroker, PVG_FT_Outline* outline)
 {
     PVG_FT_Stroker_ExportBorder(stroker, PVG_FT_STROKER_BORDER_LEFT, outline);
     PVG_FT_Stroker_ExportBorder(stroker, PVG_FT_STROKER_BORDER_RIGHT, outline);
@@ -1767,8 +1767,8 @@ void PVG_FT_Stroker_Export(PVG_FT_Stroker stroker, PVG_FT_Outline* outline)
  *  The following is very similar to PVG_FT_Outline_Decompose, except
  *  that we do support opened paths, and do not scale the outline.
  */
-PVG_FT_Error PVG_FT_Stroker_ParseOutline(PVG_FT_Stroker        stroker,
-                                       const PVG_FT_Outline* outline)
+PVG_FT_Error PVG_FT_Stroker_ParseOutline(const PVG_FT_Stroker        stroker,
+                                         const PVG_FT_Outline* outline)
 {
     PVG_FT_Vector v_last;
     PVG_FT_Vector v_control;

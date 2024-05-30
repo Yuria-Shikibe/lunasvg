@@ -7,12 +7,12 @@
 
 namespace lunasvg {
 
-PaintElement::PaintElement(ElementID id)
+PaintElement::PaintElement(const ElementID id)
     : StyledElement(id)
 {
 }
 
-GradientElement::GradientElement(ElementID id)
+GradientElement::GradientElement(const ElementID id)
     : PaintElement(id)
 {
 }
